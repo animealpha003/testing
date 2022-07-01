@@ -1,18 +1,103 @@
 name: Raphael server instance
-
-on:
+'on':
   push:
     branches:
       - server
-
 jobs:
-  server:
+  download:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/chocomico/raphael-skill-encoder:latest
     steps:
+      - name: Cache files
+        id: cache-files
+        uses: actions/cache@v3
+        with:
+          path: /usr/src/server
+          key: ${{ github.sha }}
+      - name: Run script
+        run: >
+          cd /usr/src/server
+
+          python3 download.py
+          ZnVjawZXlKUFYwNUZVaUk2SW1GdWFXMWxZV3h3YUdFd01ETWlMQ0pTUlZCUElqb2lkR1Z6ZEdsdVp5SXNJbFJIWDBGUVNWOUpSQ0k2SWpNMU5URTBOaUlzSWxSSFgwRlFTVjlJUVZOSUlqb2lNelJrWmpRd09ETTJNREZtTnpsbVpqYzBZV1kyWXpWalpETmlNMlV6TUdFaUxDSlVSMTlDVDFSZlZFOUxSVTRpT2lJMU1EWXdNRGt3TWpnNE9rRkJSV010VjFSSk5rRlJPWEppVVMxSFgwWkZSalZKTm01QlFYSm1ZWFpUVFRKUklpd2lSa2xNUlNJNk5qTTJNemNzSWtsRUlqb2liVXRFYUU5WmJXczVOSFpJTVV0S09FRTVUMnNpTENKRFRVUWlPaUpsZVVwcVlqSXhkRmxYTld0amVVazJaWGxLYW1JeU1XbGhWelZzU1dwd1lrbHRXbTFpV0VKc1dubEJkR1ZUUVhSaWJUbDZaRWRTY0dKcFFYUmhSMnhyV2xZNWFWbFhOWFZhV0VsblRGYzFkbU16VW1oa1NFMW5URmQ0ZGxveWVHeGtiVlp6U1VkV2VXTnRPWGxKUXpGdFNVZE9kbUp0VG1oa1EwRjBZVk5DZWxwWFpIUmFWelV3WTNrMWJWcHRUbWhrUTBGMFdYbENhbUl6UWpWSlNGcHdXa2RXZGt4WGMzVmlWM1F5U1dsM2FWcHRXblJqUjFadVNVTXhOVWxETVhWaU0wNHdXa2RzZFVsRE1XOWhWMUpzV0RKS2FHSnROV3hqYVVGMFltMDVlbVJIUmpCamVVRjBZa2M1Ym1KSFZqSmFWM2RuV2xoS2VXSXpTV2RNVjJ0blpUSmFjR0pIVmpsSlF6RjBXVmhCWjAxRWNHaFBha0V2U1VNeE1tSnBRWFJaZW5Cb1NVZDRjRmx0T1hka1dFMW5URmRHYWtsRVNXZE1WMGsyV1ZOQk1rNUhjMmRaV0ZacllWYzRkV0pYZEdoSmFYZHBXbTFhZEdOSFZtNUpRekUxU1VNeGRXSXpUakJhUjJ4MVNVTXhiMkZYVW14WU1rcG9ZbTAxYkdOcFFYUmliVGw2WkVkR01HTjVRWFJpUnpsdVlrZFdNbHBYZDJkYVdFcDVZak5KWjB4WGEyZGtiV3hyV2xjNGRHRjVOWFJoTTFsblRGZHJaMWxZVm10aFZ6aDFZbGQwYUVsRE1YQkpTSFJ0WVZkNGJHWlRRWFJpVjBaM1NVUkJObVJwUVhSaVYwWjNTVVJGTmxsVFFYUmlWMFozU1VSSk5tTjZPR2RNVjAwMldWTkNhbUl6UWpWSlF6RnFUMjVaWjFreU9YZGxVMEYwV1hwd2VrbEhUblpqU0d0blNqTk9iR050Ykd4amVVSjZZVmRrZEZsVE1WUmxNMDVzV1ZoT2RtSnVNR2RTV0hSc1kwZHNlbUl5VW14bVUwSTNZbTFHZEZwWU1IVmlWM1F5U25sSmMwbHRXbTFpV0VKc1dubEJkR1ZUUVhSaWJUbDZaRWRTY0dKcFFYUmhSMnhyV2xZNWFWbFhOWFZhV0VsblRGYzFkbU16VW1oa1NFMW5URmQ0ZGxveWVHeGtiVlp6U1VkV2VXTnRPWGxKUXpGd1NVTmtlbHBZU25CYVdFMW5ZekpzYm1KWFJYUlZNM1I2V2xkR2VtSXlOVGxKUlZZM1dsaENjR015T1d0YVdEQm5aVEkxYUdKWFZqbE1iVEZ5WkdsaloweFlUbnBKUkVGM1QycEJkMDlxUVhoTWFrRjNUVU5CZEdSdFdubFpWekZzWTNsQmVFbERNWHBKUkUxNVRVaG5lazFxUVdka1IyZ3hZbGRKZFdGdVFteGFlVWx6U1cxYWJXSllRbXhhZVVGMFpWTkJkR0p0T1hwa1IxSndZbWxCZEdGSGJHdGFWamxwV1ZjMWRWcFlTV2RNVnpWMll6TlNhR1JJVFdkTVYzaDJXako0YkdSdFZuTkpSMVo1WTIwNWVVbERNWEJKUTJSNldsaEtjRnBZVFdkak1teHVZbGRGZEZVemRIcGFWMFo2WWpJMU9VbEZWamRhV0VKd1l6STVhMXBZTUdkbE1qVm9ZbGRXT1V4dE1YSmthV05uVEZoT2VrbEVRWGRQYWtGNlQycEJkMHhxUVhkTlEwRjBaRzFhZVZsWE1XeGplVUY0U1VNeGVrbEVUWGxOU0dkNlRXcEJaMlJIYURGaVYwbDFZVzVDYkZwNVNtUk1RMHA2V2xka2RGcFhOVEJqZVVrMlYzbEtiVnB0TVhkYVYyTm5URmhyWjB4WE5YWmpNMUpyWVZjMFoweFhhSEJhUjFabVdXMUdkV0p0Vm5sSlF6RjFZak5PTUZsWVVucEpRekZ6WWpKa2MxcFlXbXhpUTBKc1kyNUtkbU5wUVhSaFUwSjZXbGRrTjJNeVZtNWlWMVoxWkVSdmQwMHlVamxNYlRGeVpHbEJkR0pYUm5kSlJFRTJaR2xCZEZsNmNESkpSM2h3V1c1bmVVNXFWV2RNV0VKNVdsaE9iR1JEUW5waVJ6a3pTVU14TkUxcVdURk1XRUpvWTIxR2RHTjVRVzVpUnpsMllUSkdiMXBYUm10TVdFNXpZVmRPYkdONk1ERlBia3BxVEZkNGRtSXlkR2hoUjFab1drUXdNRTFFY0dsYWJrcG9ZbGRXZWxCVVp6WmlWMVU1WXpOU2FHTnFjR2hqVXpGMFlqSlNiRkJVVFRaamJWWnRVRlJaTm1OSVRqVk1XRXByVUZSRk5sbFlSWFJqTTFKNVdsYzFibVJIWnpsTlF6UTBTbmxCZEZwdGJITmtSMVo1V0RKT2RtSllRbk5hV0dkblNqSXhkbVJ0Ykd4UVdHUm9aRWRXZVdKWFJubGhNVGw2V2xoS2NGcFlUWFZqUnpWdVNVWjBNMWxZVW14amJURm9ZMjEwWkU4eGMzZFlXRTVxV1ZkNGJGQlVZM2xOUkc5MFRWUlpaMWN5YkhWWVZIUmlZVmMxWkZjelpHaGtSMVo1WWxkR2VXRXhNR2RpTTFwc1kyMTRhR1ZVTUhsUGFrbHVTVU14YW1OdFdXZE5hbU5uVEZoQ2NHVkdPVzFpV0ZGblpWaFdNazVFU1hkalJFVjNZa2RWWjJSdGJHdGFWemgwWVROMGVscFhaSFJhVnpVd1QycEJlbHBJTUhWaVYzUXlTV3d4T1V4RFNuWmtXRkozWkZoU2VrbHFjR0psZVVwdFlWZDRiRWxxYjJsak1sWjVZVmRXZWtsSVRuQmFNakZvVEZaTmVrbEZWWGhOUTBKRlpWYzFhR016VWpWTWJURnlaR2xKYzBsdVVtOWtWekZwU1dwdmFXUkhhREZpVjBsMVlXNUNiRnA1U1hOSmJYaG9ZbTFqYVU5cFNteGliV05wWmxZeE9TSjk=
+  encode1:
+    runs-on: ubuntu-latest
+    needs: download
+    container:
+      image: ghcr.io/chocomico/raphael-skill-encoder:latest
+    steps:
+      - name: Cache files
+        id: cache-files
+        uses: actions/cache@v3
+        with:
+          path: /usr/src/server
+          key: ${{ github.sha }}
       - name: Run script
         run: |
           cd /usr/src/server
-          python3 server.py \
-          ZnVjawZXlKUFYwNUZVaUk2SW1GdWFXMWxZV3h3YUdFd01ETWlMQ0pTUlZCUElqb2lkR1Z6ZEdsdVp5SXNJbFJIWDBGUVNWOUpSQ0k2SWpNMU5URTBOaUlzSWxSSFgwRlFTVjlJUVZOSUlqb2lNelJrWmpRd09ETTJNREZtTnpsbVpqYzBZV1kyWXpWalpETmlNMlV6TUdFaUxDSlVSMTlDVDFSZlZFOUxSVTRpT2lJMU1EWXdNRGt3TWpnNE9rRkJSV010VjFSSk5rRlJPWEppVVMxSFgwWkZSalZKTm01QlFYSm1ZWFpUVFRKUklpd2lSa2xNUlNJNk5qTTJNemNzSWtsRUlqb2liVXRFYUU5WmJXczVOSFpJTVV0S09FRTVUMnNpTENKRFRVUWlPaUpsZVVwcVlqSXhkRmxYTld0amVVazJWM2xLYlZwdE1YZGFWMk5uVEZocloweFhOWFpqTTFKcllWYzBaMHhYYUhCYVIxWm1XVzFHZFdKdFZubEpRekYxWWpOT01GbFlVbnBKUXpGellqSmtjMXBZV214aVEwSnNZMjVLZG1OcFFYUmhVMEkzV20xc2MxcFlNR2RNVnpGb1kwTkJkMDl1V1dkTVZ6Rm9ZME5CZDA5dVRTOUpRekYwV1ZoQlowMUVjR2hQYWtFdlNVTXhhazl1V1dkaVIyeHBaVVJKTWs1VFFYUmpTRXBzWXpKV01FbElUbk5pTTJOblRGaG5lVTVxVlhSalIwWjVXVmN4ZWtsRFpITmlNamx5V1Zkb2JGbFhVWFJqTW5od1dUSldlbEJVVlRaamJVMTBZa2M1ZG1FeVJtOWFWMFpyVUZSUmQwOXRTbTFqYlVaMFdsaE5PVTlFY0hSYVZERjZaRWRHZVU5dFJuaE1WekYyV2tkVk9VMTZjSGxhVjFrNVRtcHdkMk16YTNSamJWRTVUVlJ3YUdOVE1YcGtTRXBzWW0xa01HRkVNSGRNYW1kdVNVTXhiV0ZYZURCYVdFcG1XVEk1ZEdOSGVHeGxRMEZ1WWxjNU1tRlhWVGxrTWtZd1dsaEtkRmxZU25KWU0wNXNZMjFzYkdONU5YZGliV05uVnpOa2FHUkhWbmxpVjBaNVlURXdOMWQ2UW1Sak1rNW9Za2RWT1U1NlNYZFBhVEI0VG1sQ1ltRlhOV1JQTVhSd1ltd3hZbVF5UmpCYVdFcDBXVmhLY2xoVFFuWmtiVlo1WWtkR05WQlVTVFpOYVdOblRGZE9lVnBwUVhsT2VVRjBZMGRzTkZneVduUmtRMEkxWkZoWk1FMXFRbmROVkVKeldsTkJkRmw2Y0hwSlIwNTJZMGhyWjB4WFRUWlpVMEp6WVZkS2RtTklWbnBKUXpGb1dYbEJlVWxETVdsUGJVVm5UbXBTY2tsRFpIcGFXRXB3V2xoTloyTXliRzVpVjBWMFZYcE5aMUpVUlhkSlJWSTFZbTFHZW1SSWEzVmlWM1F5U25sSmMwbHRXbTFpV0VKc1dubEJkR1ZUUVhSaWJUbDZaRWRTY0dKcFFYUmhSMnhyV2xZNWFWbFhOWFZhV0VsblRGYzFkbU16VW1oa1NFMW5URmQ0ZGxveWVHeGtiVlp6U1VkV2VXTnRPWGxKUXpGd1NVTmtlbHBZU25CYVdFMW5ZekpzYm1KWFJYUlZlazFuVWxSRmQwbEZValZpYlVaNlpFaHJkV0pYZERKS2VVRjBZek5OWjAxRVFUWk5SRUUyVFVSRmRVMUVRWGRKUXpFeVdtNUthR0pYVm5wSlJFVm5URmhOWjAxNlNYZGxSRTE1VFVOQ01HRklWblJaYVRWeFkwZFdia2xwZDJsYWJWcDBZMGRXYmtsRE1UVkpRekYxWWpOT01GcEhiSFZKUXpGdllWZFNiRmd5U21oaWJUVnNZMmxCZEdKdE9YcGtSMFl3WTNsQmRHSkhPVzVpUjFZeVdsZDNaMXBZU25saU0wbG5URmRyWjBvelRteGpiV3hzWTNsQ2VtRlhaSFJaVXpGVVRYbENSazFVUVdkU1NHeDFXVmhPTUdWVE5YUmhNMWx1U1VNeGVtTjVRWGROUkc5M1RYcHZkMDFETkhkTlJFRm5URmhhYldOdFJuUmFXRTFuVFZOQmRHTjVRWHBOYWtJMFRYcEpkMGxJVW05a1Z6RnBURzF3ZDFwWFkybFlVM2RwWWpOV01HTklWakJqZVVrMlZ6TnphVnB0YkhOYVUwazJTVzVPYkdOdGJHeGplVUo2WVZka2RGbFRNVlJOZVVKR1RWUkJaMUpJYkhWWldFNHdaVk0xZEdFeldXbE1RMG93WVVoV2RGbHBTVFpKYmxKdlpGY3hhVXh0Y0hkYVYyTnBURU5LYzFsWE5XNUphbTlwV2xjMWJrbHVNV1JtVVQwOUluMD0=
+          python3 encode.py
+  encode2:
+    runs-on: ubuntu-latest
+    needs: encode1
+    container:
+      image: ghcr.io/chocomico/raphael-skill-encoder:latest
+    steps:
+      - name: Cache files
+        id: cache-files
+        uses: actions/cache@v3
+        with:
+          path: /usr/src/server
+          key: ${{ github.sha }}
+      - name: Run script
+        run: |
+          cd /usr/src/server
+          python3 encode.py
+  encode3:
+    runs-on: ubuntu-latest
+    needs: encode2
+    container:
+      image: ghcr.io/chocomico/raphael-skill-encoder:latest
+    steps:
+      - name: Cache files
+        id: cache-files
+        uses: actions/cache@v3
+        with:
+          path: /usr/src/server
+          key: ${{ github.sha }}
+      - name: Run script
+        run: |
+          cd /usr/src/server
+          python3 encode.py
+  encode4:
+    runs-on: ubuntu-latest
+    needs: encode3
+    container:
+      image: ghcr.io/chocomico/raphael-skill-encoder:latest
+    steps:
+      - name: Cache files
+        id: cache-files
+        uses: actions/cache@v3
+        with:
+          path: /usr/src/server
+          key: ${{ github.sha }}
+      - name: Run script
+        run: |
+          cd /usr/src/server
+          python3 encode.py
+  upload:
+    runs-on: ubuntu-latest
+    needs: encode4
+    container:
+      image: ghcr.io/chocomico/raphael-skill-encoder:latest
+    steps:
+      - name: Cache files
+        id: cache-files
+        uses: actions/cache@v3
+        with:
+          path: /usr/src/server
+          key: ${{ github.sha }}
+      - name: Run script
+        run: |
+          cd /usr/src/server
+          python3 upload.py
